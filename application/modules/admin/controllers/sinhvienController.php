@@ -60,29 +60,29 @@ class sinhvienController extends My_Controller{
 			// echo "<pre>";
 			// print_r($FileInfo);
 
-			$validFile = TRUE;
+			// $validInsert = TRUE;
 			if(! empty($FileInfo) && $FileInfo['error'] == 0){
 				// echo "ok file";
 				
 				$maxSizeImage = 100;//100KB
 				
 				if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
-					$validFile = FALSE;
+					$validInsert = FALSE;
 					$this->_error['errorAvata'] = 'Vui lòng chọn tệp là ảnh';
 				}
 
 				if( ! $libUpload->CheckSizeUpload($FileInfo, $maxSizeImage) ){
-					$validFile = FALSE;
+					$validInsert = FALSE;
 					$this->_error['errorAvata'] = 'Vui lòng chọn tệp có dung lượng nhỏ hơn ' . $maxSizeImage . "kB";
 				}
-				// if($validFile == TRUE){
+				// if($validInsert == TRUE){
 				// 	$saveDir = 'uploads'; // this folder in APPPATH
 				// 	$libUpload->doUpload($FileInfo, $saveDir);
-				// } // end if validFile
+				// } // end if validInsert
 			} else{
 				// echo 'error File';
 				$this->_error['errorAvata'] = 'Vui lòng chọn ảnh đại diẹn';
-				$validFile = FALSE;
+				$validInsert = FALSE;
 			}
 			
 			if($this->checkInputData($params)){
@@ -155,6 +155,7 @@ class sinhvienController extends My_Controller{
 	public function updateAction(){
 		$data = array();
 		$validInsert = TRUE;
+		$NewImage = TRUE;
 		require("application/library/upload.php");
 		$libUpload = new upload();
 		
@@ -179,24 +180,25 @@ class sinhvienController extends My_Controller{
 			// echo "<pre>";
 			// print_r($FileInfo);
 
-			$validFile = TRUE;
+			// $validInsert = TRUE;
 			if(! empty($FileInfo) && $FileInfo['error'] == 0){
 
 				$maxSizeImage = 100;//100KB
 				
 				if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
-					$validFile = FALSE;
+					$validInsert = FALSE;
 					$this->_error['errorAvata'] = 'Vui lòng chọn tệp là ảnh';
 				}
 
 				if( ! $libUpload->CheckSizeUpload($FileInfo, $maxSizeImage) ){
-					$validFile = FALSE;
+					$validInsert = FALSE;
 					$this->_error['errorAvata'] = 'Vui lòng chọn tệp có dung lượng nhỏ hơn ' . $maxSizeImage . "kB";
 				}
 			} else{
 				// echo 'error File';
-				$this->_error['errorAvata'] = 'Vui lòng chọn ảnh đại diẹn';
-				$validFile = FALSE;
+				$NewImage = FALSE;
+				// $this->_error['errorAvata'] = 'Vui lòng chọn ảnh đại diẹn';
+				// $validInsert = FALSE;
 			}
 			// $params = $_REQUEST;
 			// echo $params;
@@ -211,8 +213,14 @@ class sinhvienController extends My_Controller{
 					$validInsert = FALSE;
 				}
 				if($validInsert === TRUE){
-					$saveDir = 'uploads'; // this folder in APPPATH
-					$imageName = $libUpload->doUpload($FileInfo, $saveDir);
+					
+					if($NewImage == FALSE){
+						$imageName = $detailSinhvien['sv_avata'];
+
+					} else{
+						$saveDir = 'uploads'; // this folder in APPPATH
+						$imageName = $libUpload->doUpload($FileInfo, $saveDir);
+					}
 					// var_dump( $imageName);
 					$SinhvienUpdate = array(
 						'sv_name'    => $params['txtname'],
