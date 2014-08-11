@@ -25,6 +25,22 @@ class validation extends My_Controller{
 		return FALSE;
 	} // end isEmail
 
+	public function validEmail($email = '', $id = 0){
+		$this->loadModel("sinhvienModel");
+		if($this->model->validEmail($email, $id)){
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	public function validName($name = '', $id = 0){
+		$this->loadModel("sinhvienModel");
+		if($this->model->validName($name, $id)){
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 	public function isDuplicate($inputName, $inputEmail){
 		if($this->isNotEmpty($inputName) && $this->isNotEmpty($inputEmail)){
 			$this->loadModel("sinhvienModel");

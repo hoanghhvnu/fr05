@@ -11,10 +11,10 @@ class sinhvienController extends My_Controller{
 	
 	public function indexAction(){
 		// $this->loadModel("sinhvienModel");
-		if(isset($_GET['id'])){
+		if( isset($_GET['id']) && ctype_digit($_GET['id']) ){
 			$page = $_GET['id'];
 			// echo $page;
-			echo getType($page);
+			// echo getType($page);
 			// ctype_digit(text)
 		} else{
 			$page = 1;
@@ -46,18 +46,41 @@ class sinhvienController extends My_Controller{
 	public function insertAction(){
 		// $params = $_REQUEST;
 		// $params = $_POST['txtname'];
-		$params['txtname']    = isset($_POST['txtname']) ? $_POST['txtname'] : "";
-		$params['txtemail']   = isset($_POST['txtemail']) ? $_POST['txtemail'] : "";
-		$params['txtinfo']    = isset($_POST['txtinfo']) ? $_POST['txtinfo'] : "";
-		$params['txtaddress'] = isset($_POST['txtaddress']) ? $_POST['txtaddress'] : "";
-		$params['txtphone']   = isset($_POST['txtphone']) ? $_POST['txtphone'] : "";
-		$params['txtschool']  = isset($_POST['txtschool']) ? $_POST['txtschool'] : "";
-		$params['gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
-		// echo "<pre>";
-		// print_r($params);
+		
+
+		
 		$data = array();
 		// print_r($params);
 		if(isset($_POST['btnok'])){
+			$params['txtname']    = isset($_POST['txtname']) ? $_POST['txtname'] : "";
+			$params['txtemail']   = isset($_POST['txtemail']) ? $_POST['txtemail'] : "";
+			$params['txtinfo']    = isset($_POST['txtinfo']) ? $_POST['txtinfo'] : "";
+			$params['txtaddress'] = isset($_POST['txtaddress']) ? $_POST['txtaddress'] : "";
+			$params['txtphone']   = isset($_POST['txtphone']) ? $_POST['txtphone'] : "";
+			$params['txtschool']  = isset($_POST['txtschool']) ? $_POST['txtschool'] : "";
+			$params['gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
+			$FileInfo = isset($_FILES['AvataFile']) ? $_FILES['AvataFile'] : '';
+			echo "<pre>";
+			print_r($FileInfo);
+
+			if(! empty($FileInfo)){
+				$validFile = TRUE;
+				require("application/library/upload.php");
+				$libUpload = new upload();
+				if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
+					$validFile = FALSE;
+				}
+
+				if( ! $libUpload->CheckSizeUpload($FileInfo, 100) ){
+					$validFile = FALSE;
+				}
+				if($validFile == TRUE){
+					echo 'valid image';
+					$saveDir = 'uploads';
+					$libUpload->doUpload($FileInfo, $saveDir);
+				}
+			}
+			
 			if($this->checkInputData($params)){
 				$SinhvienInsert = array(
 					'sv_name'    => $params['txtname'],
@@ -70,11 +93,11 @@ class sinhvienController extends My_Controller{
 					'sv_gender'  => $params['gender']
 					);
 				// $data['detailSinhvien'] = $SinhvienInsert;
-				if( ! $this->model->validEmail($params['txtemail'])){
+				if( ! $this->library->validEmail($params['txtemail'])){
 					$this->_error['errorEmail'] = "Email đã tồn tại"; 
 				}
 
-				if( ! $this->model->validName($params['txtname'])){
+				if( ! $this->library->validName($params['txtname'])){
 					$this->_error['errorName'] = "Name đã tồn tại"; 
 				}
 			} else{

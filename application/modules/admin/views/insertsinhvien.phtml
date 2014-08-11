@@ -13,7 +13,7 @@
 </style>
 <h3>Insert Sinhvien</h3>
 <a href="<?php echo $this->baseurl("/admin/sinhvienController/indexAction") ?>">Danh sach Sinhvien</a></br></br>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <label>Name</label>
     <input type="text" name="txtname" value="<?php echo isset($detailSinhvien['sv_name']) ? $detailSinhvien['sv_name'] : "" ?>" />
     <span class="error">
