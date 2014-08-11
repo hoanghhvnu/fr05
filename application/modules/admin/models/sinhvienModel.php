@@ -20,18 +20,41 @@ class sinhvienModel extends database{
 		return $this->numRows();
 	}
 
-	public function checkEmail($email = '', $id = 0){
+	public function validEmail($email = '', $id = 0){
 		$sql = "SELECT * FROM $this->_table";
-		if($id == 0){
-			$sql .= " WHERE sv_email ='" . $email . "'";
-		}else{
-			$sql .= " WHERE sv_email ='" . $email . "' AND sv_id != '" . $id . "'";
-		}
-		 // echo $sql;
-		// return;
-		$this->query($sql);
-		return $this->numRows();
-	}
+		if($email !== ''){
+			if($id == 0){
+				$sql .= " WHERE sv_email ='" . $email . "'";
+			}else{
+				$sql .= " WHERE sv_email ='" . $email . "' AND sv_id != '" . $id . "'";
+			}
+			$this->query($sql);
+			$numEmail = $this->numRows();
+			if($numEmail > 0){
+				return FALSE;
+			}
+			return TRUE;
+		} // end if check empty
+	} // end checkEmail
+
+	public function validName($name = '', $id = 0){
+		$sql = "SELECT * FROM $this->_table";
+		if($name !== ''){
+			if($id == 0){
+				$sql .= " WHERE sv_name ='" . $name . "'";
+			}else{
+				$sql .= " WHERE sv_name ='" . $name . "' AND sv_id != '" . $id . "'";
+			}
+			$this->query($sql);
+			$numName =  $this->numRows();
+			if($numName > 0){
+				return FALSE;
+			}
+			return TRUE;
+		} // end if check empty
+	} // end checkEmail
+
+
 	public function listSinhvien($start = '', $limit = ''){
 		$sql = "SELECT * FROM $this->_table";
 		if($start !== '' && $limit !== ''){

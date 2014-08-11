@@ -14,16 +14,19 @@ class sinhvienController extends My_Controller{
 		if(isset($_GET['id'])){
 			$page = $_GET['id'];
 			// echo $page;
+			echo getType($page);
+			// ctype_digit(text)
 		} else{
 			$page = 1;
 		}
-		$Perpage = 5;
+		$Perpage = 2;
 		$TotalRows = $this->model->totalRows();
 		$NumPage = ceil($TotalRows / $Perpage);
 		$start =( $page - 1 ) * $Perpage;
 		$url = $this->baseurl("/admin/sinhvienController/indexAction/");
-		$link = "";
+		
 		if($NumPage > 0){
+			$link = "";
 			for($i = 1; $i <= $NumPage; $i ++){
 				$link .= "<a ";
 				$link .= "href = " . $url . $i;
@@ -31,8 +34,9 @@ class sinhvienController extends My_Controller{
 				$link .= $i . "</a>";
 				$link .= " ";
 			}
+			$data['link'] = $link;
 		}
-		$data['link'] = $link;
+		
 		$data['lsSinhvien'] = $this->model->listSinhvien($start, $Perpage);
 		// echo "<pre>";
 		// print_r($data);
@@ -40,7 +44,17 @@ class sinhvienController extends My_Controller{
 	} // end indexAction
 
 	public function insertAction(){
-		$params = $_REQUEST;
+		// $params = $_REQUEST;
+		// $params = $_POST['txtname'];
+		$params['txtname']    = isset($_POST['txtname']) ? $_POST['txtname'] : "";
+		$params['txtemail']   = isset($_POST['txtemail']) ? $_POST['txtemail'] : "";
+		$params['txtinfo']    = isset($_POST['txtinfo']) ? $_POST['txtinfo'] : "";
+		$params['txtaddress'] = isset($_POST['txtaddress']) ? $_POST['txtaddress'] : "";
+		$params['txtphone']   = isset($_POST['txtphone']) ? $_POST['txtphone'] : "";
+		$params['txtschool']  = isset($_POST['txtschool']) ? $_POST['txtschool'] : "";
+		$params['gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
+		// echo "<pre>";
+		// print_r($params);
 		$data = array();
 		// print_r($params);
 		if(isset($_POST['btnok'])){
@@ -52,25 +66,17 @@ class sinhvienController extends My_Controller{
 					'sv_address' => $params['txtaddress'],
 					'sv_phone'   => $params['txtphone'],
 					'sv_school'  => $params['txtschool'],
-					'sv_avata'   => $params['txtavata'],
+					// 'sv_avata'   => $params['txtavata'],
 					'sv_gender'  => $params['gender']
 					);
-				$data['detailSinhvien'] = $SinhvienInsert;
-				// $checkDuplicate = $this->library->isDuplicate($params['txtname'], $params['txtemail']);
-				$numEmail = $this->model->checkEmail($params['txtemail']);
-				// echo $numEmail;
-				// return;
-				if($numEmail > 0){
+				// $data['detailSinhvien'] = $SinhvienInsert;
+				if( ! $this->model->validEmail($params['txtemail'])){
 					$this->_error['errorEmail'] = "Email đã tồn tại"; 
 				}
-				// if($checkDuplicate == 0){
-				// 	$this->model->insertSinhvien($SinhvienInsert);
-				// 	$this->redirect($this->baseurl("/admin/sinhvienController/indexAction"));
-				// } else if($checkDuplicate == 1){
-				// 	$this->_error['errorName'] = "Tên sinh viên đã tồn tại"; 
-				// } else if($checkDuplicate == 2){
-				// 	$this->_error['errorEmail'] = "Email đã tồn tại"; 
-				// }
+
+				if( ! $this->model->validName($params['txtname'])){
+					$this->_error['errorName'] = "Name đã tồn tại"; 
+				}
 			} else{
 				$SinhvienInsert = array();
 				if(isset($params['txtname']) && $params['txtname'] != ''){
@@ -80,15 +86,8 @@ class sinhvienController extends My_Controller{
 					$data['detailSinhvien'] = $SinhvienInsert;
 				}
 				
-			}
+			} // end if checkInputData
 		} // end if submit
-		// $data['ek'] = 3;
-		// print_r($data);
-		// print_r($data);
-		// $oldData = $data;
-		// $data = array_merge($oldData, $this->_error);
-		// echo "<pre>";
-		// print_r($data);
 		if(isset($data) && ! empty($data)){
 			$oldData = $data;
 			$data = array_merge($this->_error,$oldData);
@@ -129,7 +128,7 @@ class sinhvienController extends My_Controller{
 			$detailSinhvien = $this->model->detailSinhvien($id);
 			// echo "<pre>";
 			// print_r($detailSinhvien);
-			// $data['detailSinhvien'] = $detailSinhvien;
+			$data['detailSinhvien'] = $detailSinhvien;
 		}
 
 		if(isset($_POST['btnok'])){
@@ -147,26 +146,25 @@ class sinhvienController extends My_Controller{
 					'sv_avata' => $params['txtavata'],
 					'sv_gender' => $params['gender']
 					);
-				$numEmail = $this->model->checkEmail($params['txtemail'], $id);
-				// echo $numEmail;
-				// return;
-				if($numEmail > 0){
-					$this->_error['errorEmail'] = "Email đã tồn tại"; 
-					// return;
-				} else{
+				$isValid = TRUE;
+				if( ! $this->model->validEmail($params['txtemail'], $id)){
+					$this->_error['errorEmail'] = "Email đã tồn tại";
+					$isValid = FALSE;
+				}
+
+				if( ! $this->model->validName($params['txtname'], $id)){
+					$this->_error['errorName'] = "Name đã tồn tại";
+					$isValid = FALSE;
+				}
+				if($isValid === TRUE){
 					$this->model->editSinhvien($SinhvienUpdate,$id);
 					$this->redirect($this->baseurl("/admin/sinhvienController/indexAction"));
 				}
-				// echo "<pre>";
-				// print_r($SinhvienUpdate);
-				
 			} // if valid data
 			
 		} // if bntok
-		$data = array_merge((array)$this->_error);
-		$data['detailSinhvien'] = $detailSinhvien;
-		// echo "<pre>";
-		// print_r($data);
+
+		$data = array_merge($data,$this->_error);
 		$this->loadView("updateSinhvien",$data);
 	} // end updateAction
 
@@ -207,14 +205,14 @@ class sinhvienController extends My_Controller{
 		    $flag = false;
 		}
 
-		if( ! $this->library->isNotEmpty($params['txtavata'])){
-		    $this->_error['errorAvata'] = "Vui lòng nhập avata"; 
-		    $flag = false;
-		}
+		// if( ! $this->library->isNotEmpty($params['txtavata'])){
+		//     $this->_error['errorAvata'] = "Vui lòng nhập avata"; 
+		//     $flag = false;
+		// }
 
 		if(isset($params['gender'])){
 			if( ! $this->library->isNotEmpty($params['gender'])){
-			    $this->_error['errorGender'] = "Vui lòng nhập giới tính"; 
+			    $this->_error['errorGender'] = "Vui lòng chọn giới tính"; 
 			    $flag = false;
 			}
 		} else{

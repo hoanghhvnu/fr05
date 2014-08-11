@@ -29,6 +29,7 @@ function MyConfirm(string) {
 
 	<?php
 		if(isset($lsSinhvien) && ! empty($lsSinhvien)){
+			$ArrayGender = array('1' => 'Nam', '2' => 'Nữ');
 			foreach ($lsSinhvien as $key => $value) :
 			?>
 			<tr>
@@ -41,7 +42,7 @@ function MyConfirm(string) {
 			<td><?php echo $value['sv_phone'] ?></td>
 			<td><?php echo $value['sv_school'] ?></td>
 			<td><?php echo $value['sv_avata'] ?></td>
-			<td><?php echo $value['sv_gender'] ?></td>
+			<td><?php echo $ArrayGender[$value['sv_gender']] ?></td>
 			<td><a href="<?php echo $this->baseurl("/admin/sinhvienController/updateAction") . "/" . $value['sv_id']
 			?>">Edit</a></td>
 			<td><a onclick="if(MyConfirm('Bạn chắc chắn xoá sinh vien này?') == false)
