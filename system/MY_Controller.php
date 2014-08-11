@@ -50,7 +50,7 @@ class MY_Controller
         $this->library = new $library_name;
     }
 
-    public function baseurl($url){
+    public function baseurl($url = ''){
         $str = "http://localhost/fr05" . $url;
         return $str;
     }

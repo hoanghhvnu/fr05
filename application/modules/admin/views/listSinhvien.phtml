@@ -8,10 +8,18 @@ function MyConfirm(string) {
     }
 }
 </script>
+<style type="text/css">
+	img{
+		width: 80px;
+		height: 100px;
+	}
+</style>
 <h3>Danh sach sinh vien</h3>
 <a href="<?php echo $this->baseurl("/admin/sinhvienController/insertAction") ?>">Insert Sinhvien</a></br></br>
 <form action="<?php echo $this->baseurl("/admin/sinhvienController/deleteAction") ?>" method = 'post'>
-<input type="submit" name = 'btnDeleteSelect' value = 'Xoá các mục đã chọn'>
+<input onclick="if(MyConfirm('Bạn chắc chắn xoá sinh vien này?') == false)
+                          return false"
+ type="submit" name = 'btnDeleteSelect' value = 'Xoá các mục đã chọn'>
 
 <table border = 1>
 	<th>Select</th>
@@ -41,7 +49,9 @@ function MyConfirm(string) {
 			<td><?php echo $value['sv_address'] ?></td>
 			<td><?php echo $value['sv_phone'] ?></td>
 			<td><?php echo $value['sv_school'] ?></td>
-			<td><?php echo $value['sv_avata'] ?></td>
+			<td><img src="<?php echo $this->baseurl() . '/uploads' . '/' . $value['sv_avata']; ?>" alt="">
+			<?php //echo $value['sv_avata'] ?>
+			</td>
 			<td><?php echo $ArrayGender[$value['sv_gender']] ?></td>
 			<td><a href="<?php echo $this->baseurl("/admin/sinhvienController/updateAction") . "/" . $value['sv_id']
 			?>">Edit</a></td>

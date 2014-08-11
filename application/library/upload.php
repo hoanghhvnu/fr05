@@ -41,6 +41,7 @@ class upload{
 			$NewName = time() . $FileInfoUpload['name'];
 			// echo $DesDir . "/" . $NewName;
 			move_uploaded_file($FileInfoUpload['tmp_name'], $DesDir . "/" . $NewName);
+			return $NewName;
 		}
 	}
 } // end class upload
