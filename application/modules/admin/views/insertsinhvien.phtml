@@ -15,41 +15,41 @@
 <a href="<?php echo $this->baseurl("/admin/sinhvienController/indexAction") ?>">Danh sach Sinhvien</a></br></br>
 <form action="" method="post" enctype="multipart/form-data">
     <label>Name</label>
-    <input type="text" name="txtname" value="<?php echo isset($detailSinhvien['sv_name']) ? $detailSinhvien['sv_name'] : "" ?>" />
+    <input type="text" name="txtname" value="<?php echo isset($EnteredData['sv_name']) ? $EnteredData['sv_name'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorName']) ? $data['errorName'] : ""; ?>
     </span>
     <br />
 
     <label>Email</label>
-    <input type="text" name="txtemail" value="" />
+    <input type="text" name="txtemail" value="<?php echo isset($EnteredData['sv_email']) ? $EnteredData['sv_email'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorEmail']) ? $data['errorEmail'] : ""; ?>
     </span>
     <br />
 
     <label>Info</label>
-    <input type="text" name="txtinfo" value="" />
+    <input type="text" name="txtinfo" value="<?php echo isset($EnteredData['sv_info']) ? $EnteredData['sv_info'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorInfo']) ? $data['errorInfo'] : ""; ?>
     </span>
     <br />
 
     <label>Address</label>
-    <input type="text" name="txtaddress" value="" />
+    <input type="text" name="txtaddress" value="<?php echo isset($EnteredData['sv_address']) ? $EnteredData['sv_address'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorAddress']) ? $data['errorAddress'] : ""; ?>
     </span>
     <br />
     <label>Phone</label>
-    <input type="text" name="txtphone" value="" />
+    <input type="text" name="txtphone" value="<?php echo isset($EnteredData['sv_phone']) ? $EnteredData['sv_phone'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorPhone']) ? $data['errorPhone'] : ""; ?>
     </span>
     <br />
 
     <label>School</label>
-    <input type="text" name="txtschool" value="" />
+    <input type="text" name="txtschool" value="<?php echo isset($EnteredData['sv_school']) ? $EnteredData['sv_school'] : "" ?>" />
     <span class="error">
         <?php echo isset($data['errorSchool']) ? $data['errorSchool'] : ""; ?>
     </span>
@@ -64,8 +64,8 @@
     <br />
 
     <label>Gender</label>
-    Male&nbsp;<input type="radio" name="gender" value="1"  />
-    Famale&nbsp;<input type="radio" name="gender" value="2" />
+    Male&nbsp;<input type="radio" name="gender" value="1" <?php if(isset($EnteredData['sv_gender']) && $EnteredData['sv_gender'] == 1) echo "checked = TRUE"; ?>/>
+    Famale&nbsp;<input type="radio" name="gender" value="2" <?php if(isset($EnteredData['sv_gender']) && $EnteredData['sv_gender'] == 2) echo "checked = TRUE"; ?> />
     <span class="error">
         <?php echo isset($data['errorGender']) ? $data['errorGender'] : ""; ?>
     </span>
