@@ -1,0 +1,59 @@
+<script type="text/javascript">
+function MyConfirm(string) {
+    
+    if (confirm(string) == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+</script>
+<h3>Danh sach sinh vien</h3>
+<a href="<?php echo $this->baseurl("/admin/sinhvienController/insertAction") ?>">Insert Sinhvien</a></br></br>
+<form action="<?php echo $this->baseurl("/admin/sinhvienController/deleteAction") ?>" method = 'post'>
+<input type="submit" name = 'btnDeleteSelect' value = 'Xoá các mục đã chọn'>
+
+<table border = 1>
+	<th>Select</th>
+	<th>Id</th>
+	<th>Name</th>
+	<th>email</th>
+	<th>info</th>
+	<th>adress</th>
+	<th>phone</th>
+	<th>school</th>
+	<th>avata</th>
+	<th>gender</th>
+	<th>edit</th>
+	<th>delete</th>
+
+	<?php
+		if(isset($lsSinhvien) && ! empty($lsSinhvien)){
+			foreach ($lsSinhvien as $key => $value) :
+			?>
+			<tr>
+			<td><input type="checkbox" name = 'ArrayId[]' value="<?php echo $value['sv_id'] ?>"></td>
+			<td><?php echo $value['sv_id'] ?></td>
+			<td><?php echo $value['sv_name'] ?></td>
+			<td><?php echo $value['sv_email'] ?></td>
+			<td><?php echo $value['sv_info'] ?></td>
+			<td><?php echo $value['sv_address'] ?></td>
+			<td><?php echo $value['sv_phone'] ?></td>
+			<td><?php echo $value['sv_school'] ?></td>
+			<td><?php echo $value['sv_avata'] ?></td>
+			<td><?php echo $value['sv_gender'] ?></td>
+			<td><a href="<?php echo $this->baseurl("/admin/sinhvienController/updateAction") . "/" . $value['sv_id']
+			?>">Edit</a></td>
+			<td><a onclick="if(MyConfirm('Bạn chắc chắn xoá sinh vien này?') == false)
+                          return false"
+                href="<?php echo $this->baseurl("/admin/sinhvienController/deleteAction") . "/" . $value['sv_id']
+			
+			?>">Delete</a></td>
+			</tr>
+			<?php
+			endforeach;
+		}
+	?>
+</table>
+<?php if(isset($link)) echo "Trang: " . $link ?>
+</form>

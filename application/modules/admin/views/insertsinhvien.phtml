@@ -1,0 +1,76 @@
+<meta charset="utf-8" />
+<style>
+    label{
+        float: left;
+        width: 150px;
+    }
+    input{
+        margin-bottom: 5px;
+    }
+    .error{
+        color:red;
+    }
+</style>
+<h3>Insert Sinhvien</h3>
+<a href="<?php echo $this->baseurl("/admin/sinhvienController/indexAction") ?>">Danh sach Sinhvien</a></br></br>
+<form action="" method="post">
+    <label>Name</label>
+    <input type="text" name="txtname" value="<?php echo isset($detailSinhvien['sv_name']) ? $detailSinhvien['sv_name'] : "" ?>" />
+    <span class="error">
+        <?php echo isset($data['errorName']) ? $data['errorName'] : ""; ?>
+    </span>
+    <br />
+
+    <label>Email</label>
+    <input type="text" name="txtemail" value="" />
+    <span class="error">
+        <?php echo isset($data['errorEmail']) ? $data['errorEmail'] : ""; ?>
+    </span>
+    <br />
+
+    <label>Info</label>
+    <input type="text" name="txtinfo" value="" />
+    <span class="error">
+        <?php echo isset($data['errorInfo']) ? $data['errorInfo'] : ""; ?>
+    </span>
+    <br />
+
+    <label>Address</label>
+    <input type="text" name="txtaddress" value="" />
+    <span class="error">
+        <?php echo isset($data['errorAddress']) ? $data['errorAddress'] : ""; ?>
+    </span>
+    <br />
+    <label>Phone</label>
+    <input type="text" name="txtphone" value="" />
+    <span class="error">
+        <?php echo isset($data['errorPhone']) ? $data['errorPhone'] : ""; ?>
+    </span>
+    <br />
+
+    <label>School</label>
+    <input type="text" name="txtschool" value="" />
+    <span class="error">
+        <?php echo isset($data['errorSchool']) ? $data['errorSchool'] : ""; ?>
+    </span>
+    <br />
+
+    <label>Avata</label>
+    <input type="text" name="txtavata" value="" />
+    <span class="error">
+        <?php echo isset($data['errorAvata']) ? $data['errorAvata'] : ""; ?>
+    </span>
+    <br />
+
+    <label>Gender</label>
+    Male&nbsp;<input type="radio" name="gender" value="1"  />
+    Famale&nbsp;<input type="radio" name="gender" value="2" />
+    <span class="error">
+        <?php echo isset($data['errorGender']) ? $data['errorGender'] : ""; ?>
+    </span>
+    <br />
+
+    
+    <label>&nbsp;</label>
+    <input type="submit" name="btnok" value="Insert" />
+</form>
