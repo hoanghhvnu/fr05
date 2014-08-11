@@ -153,7 +153,11 @@ class sinhvienController extends My_Controller{
 	} // end deleteAction
 
 	public function updateAction(){
-		// $this->model->editSinhvien();
+		$data = array();
+		$validInsert = TRUE;
+		require("application/library/upload.php");
+		$libUpload = new upload();
+		
 		if(isset($_GET['id']) && $_GET['id'] !== ''){
 			$id = $_GET['id'];
 			// echo $id;
@@ -164,31 +168,62 @@ class sinhvienController extends My_Controller{
 		}
 
 		if(isset($_POST['btnok'])){
-			$params = $_REQUEST;
-			// echo $params;
-			if($this->checkInputData($params)){
-				// echo "valid";
-				$SinhvienUpdate = array(
-					'sv_name' => $params['txtname'],
-					'sv_email' => $params['txtemail'],
-					'sv_info' => $params['txtinfo'],
-					'sv_address' => $params['txtaddress'],
-					'sv_phone' => $params['txtphone'],
-					'sv_school' => $params['txtschool'],
-					'sv_avata' => $params['txtavata'],
-					'sv_gender' => $params['gender']
-					);
-				$isValid = TRUE;
-				if( ! $this->model->validEmail($params['txtemail'], $id)){
-					$this->_error['errorEmail'] = "Email đã tồn tại";
-					$isValid = FALSE;
+			$params['txtname']    = isset($_POST['txtname']) ? $_POST['txtname'] : "";
+			$params['txtemail']   = isset($_POST['txtemail']) ? $_POST['txtemail'] : "";
+			$params['txtinfo']    = isset($_POST['txtinfo']) ? $_POST['txtinfo'] : "";
+			$params['txtaddress'] = isset($_POST['txtaddress']) ? $_POST['txtaddress'] : "";
+			$params['txtphone']   = isset($_POST['txtphone']) ? $_POST['txtphone'] : "";
+			$params['txtschool']  = isset($_POST['txtschool']) ? $_POST['txtschool'] : "";
+			$params['gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
+			$FileInfo = isset($_FILES['AvataFile']) ? $_FILES['AvataFile'] : '';
+			// echo "<pre>";
+			// print_r($FileInfo);
+
+			$validFile = TRUE;
+			if(! empty($FileInfo) && $FileInfo['error'] == 0){
+
+				$maxSizeImage = 100;//100KB
+				
+				if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
+					$validFile = FALSE;
+					$this->_error['errorAvata'] = 'Vui lòng chọn tệp là ảnh';
 				}
 
-				if( ! $this->model->validName($params['txtname'], $id)){
-					$this->_error['errorName'] = "Name đã tồn tại";
-					$isValid = FALSE;
+				if( ! $libUpload->CheckSizeUpload($FileInfo, $maxSizeImage) ){
+					$validFile = FALSE;
+					$this->_error['errorAvata'] = 'Vui lòng chọn tệp có dung lượng nhỏ hơn ' . $maxSizeImage . "kB";
 				}
-				if($isValid === TRUE){
+			} else{
+				// echo 'error File';
+				$this->_error['errorAvata'] = 'Vui lòng chọn ảnh đại diẹn';
+				$validFile = FALSE;
+			}
+			// $params = $_REQUEST;
+			// echo $params;
+			if($this->checkInputData($params)){
+				if( ! $this->library->validEmail($params['txtemail'], $id)){
+					$this->_error['errorEmail'] = "Email đã tồn tại";
+					$validInsert = FALSE;
+				}
+
+				if( ! $this->library->validName($params['txtname'], $id)){
+					$this->_error['errorName'] = "Name đã tồn tại";
+					$validInsert = FALSE;
+				}
+				if($validInsert === TRUE){
+					$saveDir = 'uploads'; // this folder in APPPATH
+					$imageName = $libUpload->doUpload($FileInfo, $saveDir);
+					// var_dump( $imageName);
+					$SinhvienUpdate = array(
+						'sv_name'    => $params['txtname'],
+						'sv_email'   => $params['txtemail'],
+						'sv_info'    => $params['txtinfo'],
+						'sv_address' => $params['txtaddress'],
+						'sv_phone'   => $params['txtphone'],
+						'sv_school'  => $params['txtschool'],
+						'sv_avata'   => $imageName,
+						'sv_gender'  => $params['gender']
+						);
 					$this->model->editSinhvien($SinhvienUpdate,$id);
 					$this->redirect($this->baseurl("/admin/sinhvienController/indexAction"));
 				}

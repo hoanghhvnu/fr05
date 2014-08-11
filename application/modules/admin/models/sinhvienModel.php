@@ -105,11 +105,6 @@ class sinhvienModel extends database{
 			foreach ($SinhvienInfo as $key => $value) {
 				$SinhvienInfo[$key] = "'" . $value . "'";
 			} // end foreach
-			// $StringInsert = implode(",", $SinhvienInfo);
-			// $column = array('sv_name','sv_email','sv_info','sv_address','sv_phone','sv_school','sv_avata','sv_gender');
-			// $StringUpdate = "";
-			// print_r($column);
-			// print_r($SinhvienInfo);
 			$ArrayColumnValue = array();
 			foreach ($SinhvienInfo as $key => $value) {
 				$ArrayColumnValue[$key] = $key . "=" . $value;
@@ -120,7 +115,7 @@ class sinhvienModel extends database{
 			$sql = "UPDATE $this->_table SET ";
 			$sql .= $StringUpdate;
 			$sql .= " WHERE sv_id = $id";
-			// echo $sql;
+			echo $sql;
 			$this->query($sql);
 			// return TRUE;
 		}
