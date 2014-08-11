@@ -10,6 +10,8 @@ class sinhvienController extends My_Controller{
 	}
 	
 	public function indexAction(){
+		require("application/library/pagination.php");
+		$libPagination = new pagination();
 		// $this->loadModel("sinhvienModel");
 		if( isset($_GET['id']) && ctype_digit($_GET['id']) ){
 			$page = $_GET['id'];
@@ -19,24 +21,30 @@ class sinhvienController extends My_Controller{
 		} else{
 			$page = 1;
 		}
-		$Perpage = 5;
-		$TotalRows = $this->model->totalRows();
-		$NumPage = ceil($TotalRows / $Perpage);
+		$Perpage = 2;
+		// $TotalRows = $this->model->totalRows();
+		// $NumPage = ceil($TotalRows / $Perpage);
+		$url = $this->baseurl("/admin/sinhvienController/indexAction");
+		$libPagination->setPerpage($Perpage);
+		$libPagination->setTotalItem($this->model->totalRows());
+		$libPagination->setBaseUrl($url);
+
 		$start =( $page - 1 ) * $Perpage;
-		$url = $this->baseurl("/admin/sinhvienController/indexAction/");
 		
-		if($NumPage > 0){
-			$link = "";
-			for($i = 1; $i <= $NumPage; $i ++){
-				$link .= "<a ";
-				$link .= "href = " . $url . $i;
-				$link .= ">";
-				$link .= $i . "</a>";
-				$link .= " ";
-			}
-			$data['link'] = $link;
-		}
 		
+		// if($NumPage > 0){
+		// 	$link = "";
+		// 	for($i = 1; $i <= $NumPage; $i ++){
+		// 		$link .= "<a ";
+		// 		$link .= "href = " . $url . $i;
+		// 		$link .= ">";
+		// 		$link .= $i . "</a>";
+		// 		$link .= " ";
+		// 	}
+		// 	$data['link'] = $link;
+		// }
+
+		$data['link'] = $libPagination->createLink();
 		$data['lsSinhvien'] = $this->model->listSinhvien($start, $Perpage);
 		// echo "<pre>";
 		// print_r($data);
