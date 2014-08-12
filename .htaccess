@@ -2,7 +2,7 @@ RewriteEngine On
 
 
 RewriteRule ^([a-zA-Z]+)/([a-zA-Z]+)/([a-zA-Z]+)$ /fr05/index.php?module=$1&controller=$2&action=$3 [L]
-RewriteRule ^([a-zA-Z]+)/([a-zA-Z]+)/([a-zA-Z]+)/([0-9]+)$ /fr05/index.php?module=$1&controller=$2&action=$3&id=$4 [L]
+RewriteRule ^([a-zA-Z]+)/([a-zA-Z]+)/([a-zA-Z]+)/([0-9])$ /fr05/index.php?module=$1&controller=$2&action=$3&id=$4 [L]
 
 
 
