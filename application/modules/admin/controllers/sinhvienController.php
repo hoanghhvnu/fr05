@@ -19,9 +19,7 @@ class sinhvienController extends My_Controller{
 		$data['link'] = $libPagination->createLink();
 		$Perpage = $libPagination->getPerPage();
 
-		// echo $_GET['page'];
 		if( isset($_GET['id']) ){
-			// var_dump(ctype_digit($_GET['id']));
 			$NumberPage = $libPagination->getNumberPage();
 			if( (ctype_digit($_GET['id']) == FALSE) || ($NumberPage == NULL)
 				|| ($_GET['id'] > $NumberPage || ($_GET['id'] <= 0)) ){
@@ -51,8 +49,8 @@ class sinhvienController extends My_Controller{
 			$params['sv_address'] = isset($_POST['txtaddress']) ? $_POST['txtaddress'] : "";
 			$params['sv_phone']   = isset($_POST['txtphone']) ? $_POST['txtphone'] : "";
 			$params['sv_school']  = isset($_POST['txtschool']) ? $_POST['txtschool'] : "";
-			$params['sv_gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
-			$data['EnteredData'] = $params;
+			$params['sv_gender']  = isset($_POST['gender']) ? $_POST['gender'] : "";
+			$data['EnteredData']  = $params;
 
 			$FileInfo = isset($_FILES['AvataFile']) ? $_FILES['AvataFile'] : '';
 
