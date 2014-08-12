@@ -12,25 +12,36 @@ class pagination{
 	public function setPerPage($Perpage = ''){
 		$Perpage = trim($Perpage);
 		if( (ctype_digit($Perpage) == TRUE) && ($Perpage > 0) ){
-			// echo 'perpage is digit and > 0';
-			// if( ($Perpage <= $this->_TotalItem)  ){
-				$this->_PerPage = $Perpage;
-			// } else{
-				// $this->_PerPage = $this->_TotalItem;
-			// }
-			// echo $this->_PerPage;
+			$this->_PerPage = $Perpage;
 		} // end if check is digit
 	} // end setPerPage
 
+	public function getPerPage(){
+		if( isset($this->_PerPage)){
+			return $this->_PerPage;
+		}
+	}
+
 	public function setBaseUrl($BaseUrl = ''){
 		$BaseUrl = trim($BaseUrl);
-		$this->_BaseUrl = $BaseUrl;
+		if($BaseUrl !== ''){
+			$this->_BaseUrl = $BaseUrl;
+		}
+		
 	}
 
 	public function setTotalItem($TotalItem = ''){
 		$TotalItem = trim($TotalItem);
 		if( (ctype_digit($TotalItem) == TRUE) && ($TotalItem > 0) ){
 			$this->_TotalItem = $TotalItem;
+		}
+	}
+
+	public function checkReady(){
+		if( (isset($this->_PerPage)) && ($this->_PerPage > 0)
+			&& (isset($this->_TotalItem)) && ($this->_TotalItem > 0)
+			&& (isset($this->_BaseUrl)) && ($this->_BaseUrl !== '') ){
+			return TRUE;
 		}
 	}
 
@@ -41,37 +52,27 @@ class pagination{
 		
 	}
 
-	public function checkReady(){
-		if( (isset($this->_PerPage)) && ($this->_PerPage > 0)
-			&& (isset($this->_TotalItem)) && ($this->_TotalItem > 0)
-			&& (isset($this->_BaseUrl)) && ($this->_BaseUrl !== '') ){
-			// echo 'ready';
-			return TRUE;
-		}
-	}
+
 	public function createLink(){
 		if($this->checkReady() == TRUE){
 			if( ($this->_PerPage > $this->_TotalItem)  ){
 				$this->_PerPage = $this->_TotalItem;
 			}
-			$link = '';
-			// echo $this->_PerPage;
 			// echo $this->_TotalItem;
-			// echo $this->_BaseUrl;
-			if ( ($this->_PerPage > 0) && ($this->_TotalItem > 0) ){
-				$this->_NumberPage = ceil($this->_TotalItem / $this->_PerPage);
-				// echo $this->_NumberPage;
-				if($this->_NumberPage > 0){
-					for($i = 1; $i <= $this->_NumberPage; $i ++) {
-						$link .= "<a ";
-						$link .= "href = '";
-						$link .= $this->_BaseUrl . '/' . $i;
-						$link .= "'>";
-						$link .= $i;
-						$link .= "</a>  ";
-					}
-					return $link;
+			// echo $this->_PerPage;
+			// echo $this->_NumberPage;
+			$link = '';
+			$this->_NumberPage = ceil($this->_TotalItem / $this->_PerPage);
+			if($this->_NumberPage > 0){
+				for($i = 1; $i <= $this->_NumberPage; $i ++) {
+					$link .= "<a ";
+					$link .= "href = '";
+					$link .= $this->_BaseUrl . '/' . $i;
+					$link .= "'>";
+					$link .= $i;
+					$link .= "</a>  ";
 				}
+				return $link;
 			}
 		}
 		
