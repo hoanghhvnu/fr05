@@ -6,48 +6,24 @@ class sinhvienController extends My_Controller{
 	public function __construct(){
 		$this->loadModel("sinhvienModel");
 		$this->loadLibrary("validation");
-		// session_start();
 	}
 	
 	public function indexAction(){
 		require("application/library/pagination.php");
 		$libPagination = new pagination();
-		// $this->loadModel("sinhvienModel");
 		if( isset($_GET['id']) && ctype_digit($_GET['id']) ){
 			$page = $_GET['id'];
-			// echo $page;
-			// echo getType($page);
-			// ctype_digit(text)
 		} else{
 			$page = 1;
 		}
-		$Perpage = 2;
-		// $TotalRows = $this->model->totalRows();
-		// $NumPage = ceil($TotalRows / $Perpage);
+		$Perpage = 5;
 		$url = $this->baseurl("/admin/sinhvienController/indexAction");
 		$libPagination->setPerpage($Perpage);
 		$libPagination->setTotalItem($this->model->totalRows());
 		$libPagination->setBaseUrl($url);
-
 		$start =( $page - 1 ) * $Perpage;
-		
-		
-		// if($NumPage > 0){
-		// 	$link = "";
-		// 	for($i = 1; $i <= $NumPage; $i ++){
-		// 		$link .= "<a ";
-		// 		$link .= "href = " . $url . $i;
-		// 		$link .= ">";
-		// 		$link .= $i . "</a>";
-		// 		$link .= " ";
-		// 	}
-		// 	$data['link'] = $link;
-		// }
-
 		$data['link'] = $libPagination->createLink();
 		$data['lsSinhvien'] = $this->model->listSinhvien($start, $Perpage);
-		// echo "<pre>";
-		// print_r($data);
 		$this->loadView('listSinhvien',$data);
 	} // end indexAction
 
@@ -73,7 +49,7 @@ class sinhvienController extends My_Controller{
 				
 				if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
 					$validInsert = FALSE;
-					$this->_error['errorAvata'] = 'Vui lòng chọn tệp là ảnh';
+					$this->_error['errorAvata'] = 'Vui lòng chọn tệp có định dạng là ảnh (vd: jpg, png, gif...)';
 				}
 
 				if( ! $libUpload->CheckSizeUpload($FileInfo, $maxSizeImage) ){
@@ -87,8 +63,6 @@ class sinhvienController extends My_Controller{
 			}
 			
 			if($this->checkInputData($params)){
-				
-				// $data['detailSinhvien'] = $SinhvienInsert;
 				if( ! $this->library->validEmail($params['txtemail'])){
 					$this->_error['errorEmail'] = "Email đã tồn tại";
 					$validInsert = FALSE;
@@ -119,13 +93,7 @@ class sinhvienController extends My_Controller{
 				$this->redirect($this->baseurl("/admin/sinhvienController/indexAction"));
 			}
 		} // end if submit
-		if(isset($data) && ! empty($data)){
-			$oldData = $data;
-			$data = array_merge($this->_error,$oldData);
-		} else{
-			$data = $this->_error;
-			// print_r($data);
-		}
+		$data = array_merge($data, $this->_error);
 		$this->loadView('insertSinhvien',$data);
 	} // end insertAction
 
@@ -136,12 +104,9 @@ class sinhvienController extends My_Controller{
 			$id = $_GET['id'];
 			$ArrayDeleteId = array($id);
 		} else if(isset($_POST['btnDeleteSelect'])){
-			// echo 'button click';
-			// print_r($_POST['ArrayId']);
 			if(isset($_POST['ArrayId']) && ! empty($_POST['ArrayId'])){
 				$ArrayDeleteId = $_POST['ArrayId'];
 			}
-			// return false;
 		}
 		
 		$this->model->deleteSinhvien($ArrayDeleteId);
@@ -170,17 +135,12 @@ class sinhvienController extends My_Controller{
 				$params['sv_gender']     = isset($_POST['gender']) ? $_POST['gender'] : "";
 				$FileInfo = isset($_FILES['AvataFile']) ? $_FILES['AvataFile'] : '';
 				$data['detailSinhvien'] = $params;
-				// echo "<pre>";
-				// print_r($FileInfo);
-
-				// $validInsert = TRUE;
 				if(! empty($FileInfo) && $FileInfo['error'] == 0){
-
 					$maxSizeImage = 100;//100KB
 					
 					if( ! $libUpload->CheckTypeUpload($FileInfo, 'image') ){
 						$validInsert = FALSE;
-						$this->_error['errorAvata'] = 'Vui lòng chọn tệp là ảnh';
+						$this->_error['errorAvata'] = 'Vui lòng chọn tệp có định dạng là ảnh (vd: jpg, png, gif...)';
 					}
 
 					if( ! $libUpload->CheckSizeUpload($FileInfo, $maxSizeImage) ){
@@ -190,8 +150,6 @@ class sinhvienController extends My_Controller{
 				} else{
 					$NewImage = FALSE;
 				}
-				// $params = $_REQUEST;
-				// echo $params;
 				if($this->checkInputData($params)){
 					if( ! $this->library->validEmail($params['sv_email'], $id)){
 						$this->_error['errorEmail'] = "Email đã tồn tại";
@@ -210,7 +168,6 @@ class sinhvienController extends My_Controller{
 							$saveDir = 'uploads'; // this folder in APPPATH
 							$imageName = $libUpload->doUpload($FileInfo, $saveDir);
 						}
-						// var_dump( $imageName);
 						$SinhvienUpdate = array(
 							'sv_name'    => $params['sv_name'],
 							'sv_email'   => $params['sv_email'],
@@ -221,21 +178,16 @@ class sinhvienController extends My_Controller{
 							'sv_avata'   => $imageName,
 							'sv_gender'  => $params['sv_gender']
 							);
-						// echo "<pre>";
-						// print_r($SinhvienUpdate);
 						$this->model->editSinhvien($SinhvienUpdate,$id);
 						$this->redirect($this->baseurl("/admin/sinhvienController/indexAction"));
 					}
 				} // if valid data
-				
 			} // if bntok
 
 			if(isset($_POST['btnReset'])){
 				$data['detailSinhvien'] = $OldDetailSinhvien;
 			} // end if btnREset
 		} // end if isset id
-
-		
 
 		$data = array_merge($data,$this->_error);
 		$this->loadView("updateSinhvien",$data);
