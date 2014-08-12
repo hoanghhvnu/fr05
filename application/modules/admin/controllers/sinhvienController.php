@@ -11,18 +11,31 @@ class sinhvienController extends My_Controller{
 	public function indexAction(){
 		require("application/library/pagination.php");
 		$libPagination = new pagination();
-		if( isset($_GET['id']) && ctype_digit($_GET['id']) ){
-			$page = $_GET['id'];
-		} else{
-			$page = 1;
-		}
-		$Perpage = 5;
+
+		$Perpage = 2;
 		$url = $this->baseurl("/admin/sinhvienController/indexAction");
 		$libPagination->setPerpage($Perpage);
 		$libPagination->setTotalItem($this->model->totalRows());
 		$libPagination->setBaseUrl($url);
-		$start =( $page - 1 ) * $Perpage;
 		$data['link'] = $libPagination->createLink();
+		// var_dump($libPagination->getNumberPage());
+
+		// echo $_GET['page'];
+		if( isset($_GET['id']) ){
+			// var_dump(ctype_digit($_GET['id']));
+
+			if( (ctype_digit($_GET['id']) == FALSE) || ($_GET['id'] > $libPagination->getNumberPage() || ($_GET['id'] <= 0)) ){
+				echo "Không tìm thấy trang!";
+				return FALSE;
+			} else{
+				$page = $_GET['id'];
+			}
+		} else{
+			$page = 1;
+		}
+		// echo $page;
+		$start =( $page - 1 ) * $Perpage;
+		
 		$data['lsSinhvien'] = $this->model->listSinhvien($start, $Perpage);
 		$this->loadView('listSinhvien',$data);
 	} // end indexAction

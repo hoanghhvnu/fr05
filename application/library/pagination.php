@@ -6,33 +6,62 @@ class pagination{
 	private $_PerPage;
 	private $_BaseUrl;
 	private $_TotalItem;
+	private $_NumberPage;
 
-	public function setPerPage($Perpage){
-		$this->_PerPage = $Perpage;
-	}
+	public function setPerPage($Perpage = ''){
+		$Perpage = trim($Perpage);
+		if( (ctype_digit($Perpage) == TRUE) && ($Perpage > 0) ){
+			// echo 'perpage is digit and > 0';
+			// if( ($Perpage <= $this->_TotalItem)  ){
+				$this->_PerPage = $Perpage;
+			// } else{
+				// $this->_PerPage = $this->_TotalItem;
+			// }
+			// echo $this->_PerPage;
+		} // end if check is digit
+	} // end setPerPage
 
-	public function setBaseUrl($BaseUrl){
+	public function setBaseUrl($BaseUrl = ''){
+		$BaseUrl = trim($BaseUrl);
 		$this->_BaseUrl = $BaseUrl;
 	}
 
-	public function setTotalItem($TotalItem){
-		$this->_TotalItem = $TotalItem;
+	public function setTotalItem($TotalItem = ''){
+		$TotalItem = trim($TotalItem);
+		if( (ctype_digit($TotalItem) == TRUE) && ($TotalItem > 0) ){
+			$this->_TotalItem = $TotalItem;
+		}
+	}
+
+	public function getNumberPage(){
+		return $this->_NumberPage;
 	}
 
 	public function createLink(){
-		$link = '';
-		$numPage = ceil($this->_TotalItem / $this->_PerPage);
-		if($numPage > 0){
-			for($i = 1; $i <= $numPage; $i ++) {
-				$link .= "<a ";
-				$link .= "href = '";
-				$link .= $this->_BaseUrl . '/' . $i;
-				$link .= "'>";
-				$link .= $i;
-				$link .= "</a>  ";
-			}
-			return $link;
+		if( ($this->_PerPage > $this->_TotalItem)  ){
+			$this->_PerPage = $this->_TotalItem;
 		}
+		$link = '';
+		// echo $this->_PerPage;
+		// echo $this->_TotalItem;
+		// echo $this->_BaseUrl;
+		if ( ($this->_PerPage > 0) && ($this->_TotalItem > 0) ){
+			$this->_NumberPage = ceil($this->_TotalItem / $this->_PerPage);
+			// echo $this->_NumberPage;
+			if($this->_NumberPage > 0){
+				for($i = 1; $i <= $this->_NumberPage; $i ++) {
+					$link .= "<a ";
+					$link .= "href = '";
+					$link .= $this->_BaseUrl . '/' . $i;
+					$link .= "'>";
+					$link .= $i;
+					$link .= "</a>  ";
+				}
+				return $link;
+			}
+		}
+		
+		
 		
 	} // end function create link
 }// end class
